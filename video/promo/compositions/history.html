@@ -1,0 +1,35 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; background: #F4F6F8; }
+    #hi-cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+    #hi-cam img { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+  </style>
+
+  <div id="root" data-composition-id="history" data-width="1920" data-height="1080">
+    <div id="hi-cam">
+      <img id="hi-screen" src="assets/screens/06_historial.png" alt="Historial por cuenta con el brief de la próxima visita" />
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const ARRIVE = { scale: 1.06, x: -57.6, y: -32.4 };
+      const WIDE = { scale: 1, x: 0, y: 0 };
+      const BRIEF = { scale: 1.32, x: -530, y: -346 };      // the next-visit brief: last visit summary
+      const COLUMNS = { scale: 1.5, x: -738, y: -540 };     // commitments · objections · materials · alerts
+      const THROUGH = { scale: 3.2, x: -3181, y: -759 };    // into the «Alertas gestionadas» card
+
+      // the click on «Historial por cuenta» lands here: the page settles
+      tl.fromTo("#hi-cam", ARRIVE, { ...WIDE, duration: 0.5, ease: "expo.out", immediateRender: true }, 0);
+      // «el brief de la siguiente» (abs 23.98)
+      tl.fromTo("#hi-cam", WIDE, { ...BRIEF, duration: 0.6, ease: "power2.inOut", immediateRender: false }, 1.6);
+      // «compromisos, objeciones y alertas» (abs 25.70)
+      tl.fromTo("#hi-cam", BRIEF, { ...COLUMNS, duration: 0.6, ease: "power2.inOut", immediateRender: false }, 3.35);
+      // zoom through the managed-alerts card into the evaluation results
+      tl.fromTo("#hi-cam", COLUMNS, { ...THROUGH, duration: 0.45, ease: "power3.in", immediateRender: false }, 5.65);
+
+      window.__timelines["history"] = tl;
+    })();
+  </script>
+</template>

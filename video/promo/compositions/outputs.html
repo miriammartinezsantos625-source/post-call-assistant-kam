@@ -1,0 +1,45 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; background: #F4F6F8; }
+    #op-cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+    #op-cam img { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+    /* hides the page title the capture cut at the top edge */
+    #op-cover-top { position: absolute; left: 337px; top: 0; width: 1583px; height: 44px; background: #F4F6F8; }
+    #op-cursor { position: absolute; left: 0; top: 0; width: 64px; height: 64px; filter: drop-shadow(0 4px 6px rgba(11,25,41,.35)); }
+  </style>
+
+  <div id="root" data-composition-id="outputs" data-width="1920" data-height="1080">
+    <div id="op-cam">
+      <img id="op-screen" src="assets/screens/05_salidas.png" alt="Pantalla de salidas: KPIs, CSV, JSON, ICS y email" />
+      <div id="op-cover-top"></div>
+    </div>
+    <svg id="op-cursor" viewBox="0 0 32 32">
+      <path d="M4 2 L4 26 L10 20 L14.5 29.5 L18.5 27.7 L14.2 18.5 L22.5 18.5 Z" fill="#FFFFFF" stroke="#0B1929" stroke-width="1.8" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const ARRIVE = { scale: 1.42, x: -644.6, y: -99 };
+      const DELIVERABLES = { scale: 1.35, x: -565.5, y: -67.5 };   // CSV · JSON · ICS cards
+      const EMAIL = { scale: 1.35, x: -565.5, y: -378 };            // email draft
+      const KPI = { scale: 2.0, x: -304, y: 0 };                    // «57 s» nota → ficha aprobada
+
+      // match cut on the approve click: the new screen comes in slightly large and settles
+      tl.fromTo("#op-cam", ARRIVE, { ...DELIVERABLES, duration: 0.5, ease: "expo.out", immediateRender: true }, 0);
+      // «correo de seguimiento» (abs 18.49)
+      tl.fromTo("#op-cam", DELIVERABLES, { ...EMAIL, duration: 0.55, ease: "power2.inOut", immediateRender: false }, 1.7);
+      // «en menos de dos minutos» (abs 19.81): the measured time, large
+      tl.fromTo("#op-cam", EMAIL, { ...KPI, duration: 0.6, ease: "power2.inOut", immediateRender: false }, 3.0);
+      // pull back to the whole app, then the KAM opens «Historial por cuenta» in the sidebar
+      const WIDE = { scale: 1, x: 0, y: 0 };
+      tl.fromTo("#op-cam", KPI, { ...WIDE, duration: 0.6, ease: "power2.inOut", immediateRender: false }, 4.4);
+      const NAV = { x: 112, y: 160 };   // cursor tip on «Historial por cuenta»
+      tl.fromTo("#op-cursor", { x: 520, y: 1150, scale: 1 }, { x: NAV.x, y: NAV.y, duration: 0.55, ease: "expo.out" }, 4.75);
+      tl.fromTo("#op-cursor", { scale: 1 }, { scale: 0.86, duration: 0.06, ease: "power2.in", yoyo: true, repeat: 1, immediateRender: false }, 5.42);
+
+      window.__timelines["outputs"] = tl;
+    })();
+  </script>
+</template>

@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.env
+.streamlit/secrets.toml
+*.db
+data/local/
+outputs/
+.claude/
+.DS_Store
+# video project: keep sources, drop caches, renders and heavy audio
+video/out/
+video/promo/.hyperframes/
+video/promo/.media/
+video/promo/node_modules/
+video/promo/assets/voice/raw/
+video/promo/assets/audio/*.wav

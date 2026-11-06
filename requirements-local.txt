@@ -1,0 +1,8 @@
+# Full local pipeline: transcription (Whisper), microphone CLI, optional Claude API provider, tests
+-r requirements.txt
+faster-whisper>=1.2
+av==15.1.0          # faster-whisper 1.2 breaks with av>=19 (metadata_errors)
+sounddevice>=0.5
+soundfile>=0.12
+anthropic>=2.6.0    # optional provider (paid API)
+pytest>=8.0

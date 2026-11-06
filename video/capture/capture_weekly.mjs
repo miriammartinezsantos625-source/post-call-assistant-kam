@@ -1,0 +1,13 @@
+import { createRequire } from "node:module";
+import path from "node:path";
+const [, , pptrDir, chromePath, out] = process.argv;
+const require = createRequire(path.join(pptrDir, "package.json"));
+const puppeteer = require(pptrDir);
+const browser = await puppeteer.launch({ executablePath: chromePath, headless: true, args: ["--no-sandbox"] });
+const page = await browser.newPage();
+await page.setViewport({ width: 1600, height: 900, deviceScaleFactor: 2 });
+await page.goto("http://localhost:8502/page_weekly", { waitUntil: "networkidle2" });
+await page.waitForFunction(() => document.body.innerText.toLowerCase().includes("cobertura por segmento"), { timeout: 30000 }).catch(async () => console.log("TEXT:", (await page.evaluate(() => document.body.innerText)).slice(0, 600)));
+await new Promise(r => setTimeout(r, 2500));
+await page.screenshot({ path: out });
+await browser.close(); console.log("saved", out);

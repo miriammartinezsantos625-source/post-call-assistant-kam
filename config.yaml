@@ -1,0 +1,43 @@
+llm:
+  provider: ollama          # ollama (free, local — default) | anthropic (paid API, optional)
+
+  ollama:
+    model: qwen3.5:9b
+    host: http://localhost:11434
+    think: false            # Qwen's reasoning mode: slower, sometimes more accurate
+    temperature: 0
+    num_ctx: 8192
+    keep_alive: 30s         # unload the model soon after each note: it uses ~11 GB of RAM on a 16 GB Mac
+
+  anthropic:
+    model: claude-sonnet-5-5
+    effort: high
+    max_tokens: 16000
+    server_side_fallback: true
+
+transcription:
+  engine: faster-whisper    # local and free; the audio never leaves the laptop
+  model: small              # tiny | base | small | medium — small is a good balance for Spanish
+  language: es
+  compute_type: int8        # CPU-friendly
+  max_seconds: 180          # a post-visit dictation is ~1 min; longer audio is rejected
+  # Domain words Whisper should expect (improves "tratamiento", "ficha técnica", "si hay datos"...)
+  vocabulario: >-
+    Resumen de visita de una KAM de neurociencias. Visita a la jefa de servicio, psiquiatra infantil,
+    neuropediatra o farmacia hospitalaria de la cuenta. Objetivo. Siguiente paso. Me pregunta si hay datos
+    sobre su uso en niños, embarazadas o dosis. Lo traslado a Medical, Información Médica, Market Access,
+    Marketing, Farmacovigilancia. Tras empezar el tratamiento. Guía de práctica clínica, ficha técnica, TDAH,
+    unidad de salud mental, lista de espera, comisión de farmacia.
+
+data:
+  cuentas_csv: data/demo/cuentas_demo.csv   # point to Territory Scope's cuentas.csv when available
+  plan_csv: data/demo/plan_semanal.csv      # weekly visits planned per segment (Territory Scope's plan)
+  shared_dir: data/shared                   # visitas.csv export for Territory Scope (Phase 5)
+
+roles:
+  - psiquiatra adultos
+  - psiquiatra infantil
+  - neuropediatra
+  - jefe de servicio
+  - farmacia hospitalaria
+  - otro

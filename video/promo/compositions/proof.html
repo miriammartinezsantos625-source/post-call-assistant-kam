@@ -1,0 +1,57 @@
+<template>
+  <style>
+    @font-face { font-family: "PlexSans"; src: url("assets/fonts/plexsans-400-normal.woff2") format("woff2"); font-weight: 100 700; }
+    @font-face { font-family: "SourceSerif"; src: url("assets/fonts/sourceserif-500-normal.woff2") format("woff2"); font-weight: 500; font-style: normal; }
+    /* inside the app's KPI card: white ground, the card's blue top rule */
+    #root { position: absolute; inset: 0; overflow: hidden; background: #FFFFFF; font-family: "PlexSans", sans-serif; }
+    #pf-rule-top { position: absolute; left: 0; top: 0; width: 1920px; height: 10px; background: #1F4E79; transform-origin: 0 50%; }
+    #pf-eyebrow { position: absolute; left: 260px; top: 196px; font-family: "IBM Plex Mono", monospace; font-size: 32px;
+      letter-spacing: .14em; text-transform: uppercase; color: #1F4E79; }
+    #pf-eyebrow .w { display: inline-block; opacity: 0; margin-right: .5em; }
+    .pf-row { position: absolute; left: 260px; display: flex; align-items: center; gap: 64px; }
+    #pf-row1 { top: 290px; }
+    #pf-row2 { top: 600px; }
+    .pf-num { font-family: "SourceSerif", Georgia, serif; font-weight: 500; font-size: 230px; line-height: 1; color: #0B1929;
+      letter-spacing: -0.02em; min-width: 470px; }
+    .pf-label { font-size: 52px; line-height: 1.25; color: #1F2328; }
+    .pf-label .w { display: inline-block; opacity: 0; margin-right: .26em; }
+    .pf-label b { font-weight: 600; }
+    #pf-divider { position: absolute; left: 260px; top: 560px; width: 1400px; height: 2px; background: #BFD0E1; transform-origin: 0 50%; }
+  </style>
+
+  <div id="root" data-composition-id="proof" data-width="1920" data-height="1080">
+    <div id="pf-rule-top"></div>
+    <div id="pf-eyebrow"><span class="w">Evaluación</span><span class="w">·</span><span class="w">20</span><span class="w">notas</span><span class="w">sintéticas</span></div>
+
+    <div id="pf-row1" class="pf-row">
+      <div id="pf-num1" class="pf-num">3/3</div>
+      <div id="pf-label1" class="pf-label"><span class="w">posibles</span><span class="w">efectos</span><span class="w">adversos</span><br><span class="w"><b>detectados</b></span></div>
+    </div>
+    <div id="pf-divider"></div>
+    <div id="pf-row2" class="pf-row">
+      <div id="pf-num2" class="pf-num">0</div>
+      <div id="pf-label2" class="pf-label"><span class="w">datos</span><span class="w">de</span><span class="w">paciente</span><br><span class="w"><b>enviados</b></span><span class="w"><b>a</b></span><span class="w"><b>la</b></span><span class="w"><b>IA</b></span></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      // Measured in Phase 2 on 20 synthetic notes (outputs/fase2/resultados.md):
+      // 3/3 possible adverse events detected; 0 patient identifiers in the text sent to the model.
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#pf-rule-top", { scaleX: 0.5 }, { scaleX: 1, duration: 0.5, ease: "expo.out" }, 0);
+      // «Probado con veinte notas sintéticas» (abs 28.5–29.9)
+      tl.fromTo("#pf-eyebrow .w", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.13, ease: "power4.out", stagger: 0.07 }, 0.3);
+      // «detectó los tres posibles efectos adversos» (abs 30.8–33.2)
+      tl.fromTo("#pf-num1", { opacity: 0, scale: 1.12, filter: "blur(10px)", transformOrigin: "0% 50%" },
+        { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.6, ease: "expo.out" }, 2.35);
+      tl.fromTo("#pf-label1 .w", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.13, ease: "power4.out", stagger: 0.09 }, 3.0);
+      tl.fromTo("#pf-divider", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "expo.out" }, 4.6);
+      // «y ningún dato de paciente llegó a la IA» (abs 33.62–35.75)
+      tl.fromTo("#pf-num2", { opacity: 0, scale: 1.12, filter: "blur(10px)", transformOrigin: "0% 50%" },
+        { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.6, ease: "expo.out" }, 5.15);
+      tl.fromTo("#pf-label2 .w", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.13, ease: "power4.out", stagger: 0.08 }, 5.6);
+      window.__timelines["proof"] = tl;
+    })();
+  </script>
+</template>

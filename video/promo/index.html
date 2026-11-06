@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Post-Call Assistant KAM · demo</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #F4F6F8; }
+      #root { position: relative; width: 100%; height: 100%; }
+      #capture { z-index: 1; }
+      #review { z-index: 2; }
+      #outputs { z-index: 3; }
+      #history { z-index: 4; }
+      #proof { z-index: 5; }
+      #endcard { z-index: 6; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="40" data-width="1920" data-height="1080">
+      <!-- scenes -->
+      <div id="capture" data-composition-id="capture" data-composition-src="compositions/capture.html"
+        data-start="0" data-duration="7.6" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="review" data-composition-id="review" data-composition-src="compositions/review.html"
+        data-start="7.6" data-duration="9.05" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="outputs" data-composition-id="outputs" data-composition-src="compositions/outputs.html"
+        data-start="16.65" data-duration="5.55" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="history" data-composition-id="history" data-composition-src="compositions/history.html"
+        data-start="22.2" data-duration="6.2" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="proof" data-composition-id="proof" data-composition-src="compositions/proof.html"
+        data-start="28.4" data-duration="8.4" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="endcard" data-composition-id="endcard" data-composition-src="compositions/endcard.html"
+        data-start="36.1" data-duration="3.9" data-track-index="2" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+
+      <!-- voiceover (Kokoro ef_dora, local) -->
+      <audio id="vo1" class="clip" src="assets/voice/vo1.wav" data-start="0.5" data-duration="3.05" data-volume="1" data-track-index="10"></audio>
+      <audio id="vo2" class="clip" src="assets/voice/vo2.wav" data-start="3.85" data-duration="3.43" data-volume="1" data-track-index="10"></audio>
+      <audio id="vo3" class="clip" src="assets/voice/vo3.wav" data-start="7.55" data-duration="4.35" data-volume="1" data-track-index="10"></audio>
+      <audio id="vo4" class="clip" src="assets/voice/vo4.wav" data-start="12.2" data-duration="4.69" data-volume="1" data-track-index="10"></audio>
+      <audio id="vo5" class="clip" src="assets/voice/vo5.wav" data-start="17.15" data-duration="3.8" data-volume="1" data-track-index="10"></audio>
+      <audio id="vo7" class="clip" src="assets/voice/vo7.wav" data-start="22.6" data-duration="5.53" data-volume="1" data-track-index="10"></audio>
+      <audio id="vo8" class="clip" src="assets/voice/vo8.wav" data-start="28.5" data-duration="7.25" data-volume="1" data-track-index="10"></audio>
+      <audio id="vo6" class="clip" src="assets/voice/vo6.wav" data-start="36.6" data-duration="1.98" data-volume="1" data-track-index="10"></audio>
+
+      <!-- music bed (HeyGen catalogue) and the two real clicks -->
+      <audio id="bgm-music" class="clip" src="assets/audio/bgm40.wav" data-start="0" data-duration="40" data-volume="0.12"
+        data-fade-in="0.6" data-fade-out="1.5" data-timeline-role="music" data-track-index="11"></audio>
+      <audio id="sfx-click-check" class="clip" src="assets/audio/click.mp3" data-start="15.18" data-duration="0.26" data-volume="0.9" data-track-index="12"></audio>
+      <audio id="sfx-click-approve" class="clip" src="assets/audio/click.mp3" data-start="16.48" data-duration="0.26" data-volume="0.9" data-track-index="12"></audio>
+      <audio id="sfx-click-history" class="clip" src="assets/audio/click.mp3" data-start="22.06" data-duration="0.26" data-volume="0.9" data-track-index="12"></audio>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+    </script>
+  </body>
+</html>

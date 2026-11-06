@@ -1,0 +1,54 @@
+<template>
+  <style>
+    @font-face { font-family: "PlexSans"; src: url("assets/fonts/plexsans-400-normal.woff2") format("woff2"); font-weight: 100 700; }
+    @font-face { font-family: "SourceSerif"; src: url("assets/fonts/sourceserif-500-normal.woff2") format("woff2"); font-weight: 500; font-style: normal; }
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "PlexSans", sans-serif; }
+    /* the app's navy, wiping in from the sidebar edge to the full frame */
+    #ec-navy { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; background: #0B1929; transform-origin: 0 50%; }
+    #ec-lockup { position: absolute; left: 0; top: 330px; width: 1920px; display: flex; justify-content: center; align-items: center; gap: 34px; }
+    #ec-mark { width: 124px; height: 124px; flex: none; }
+    #ec-word { display: flex; align-items: baseline; gap: 22px; white-space: nowrap; }
+    #ec-name { font-family: "SourceSerif", Georgia, serif; font-weight: 500; font-size: 84px; color: #FFFFFF; letter-spacing: -0.01em; }
+    #ec-kam { font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 48px; letter-spacing: .12em; color: #9DB6CA; }
+    #ec-line { position: absolute; left: 0; top: 548px; width: 1920px; text-align: center; font-size: 34px; color: #C9D3DC; }
+    #ec-line .w { display: inline-block; opacity: 0; margin: 0 .14em; }
+    #ec-rule { position: absolute; left: 860px; top: 640px; width: 200px; height: 2px; background: #2A425A; transform-origin: 50% 50%; }
+    #ec-by { position: absolute; left: 0; top: 676px; width: 1920px; text-align: center; font-size: 32px; color: #FFFFFF; font-weight: 600; }
+    #ec-by span { font-family: "IBM Plex Mono", monospace; font-weight: 400; font-size: 28px; letter-spacing: .06em; color: #9DB6CA; }
+  </style>
+
+  <div id="root" data-composition-id="endcard" data-width="1920" data-height="1080">
+    <div id="ec-navy"></div>
+    <div id="ec-lockup">
+      <svg id="ec-mark" viewBox="0 0 32 32">
+        <rect id="ec-mark-bg" x="0.5" y="0.5" width="31" height="31" rx="7.5" fill="#13263A" stroke="#2A425A"/>
+        <path id="ec-arc" pathLength="1" d="M8.5 21c2.4-7 4.9-10.4 7.5-10.4S21.1 14 23.5 21" fill="none" stroke="#FFFFFF" stroke-width="1.9" stroke-linecap="round" stroke-dasharray="1" stroke-dashoffset="1" opacity="0"/>
+        <circle id="ec-dot" cx="16" cy="10.6" r="2.3" fill="#FFFFFF"/>
+        <path id="ec-base" pathLength="1" d="M8.5 24.4h15" stroke="#9DB6CA" stroke-width="1.2" stroke-linecap="round" stroke-dasharray="1" stroke-dashoffset="1" opacity="0"/>
+      </svg>
+      <div id="ec-word"><span id="ec-name">Post-Call Assistant</span><span id="ec-kam">KAM</span></div>
+    </div>
+    <div id="ec-line"><span class="w">Dictado</span><span class="w">→</span><span class="w">ficha</span><span class="w">CRM</span><span class="w">·</span><span class="w">IA</span><span class="w">local</span><span class="w">·</span><span class="w">aprobación</span><span class="w">obligatoria</span></div>
+    <div id="ec-rule"></div>
+    <div id="ec-by">Miriam Martínez Santos, PhD &nbsp;<span>· datos sintéticos</span></div>
+  </div>
+
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#ec-navy", { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "power3.inOut" }, 0);
+      tl.fromTo("#ec-mark-bg", { opacity: 0 }, { opacity: 1, duration: 0.2, ease: "none" }, 0.5);
+      tl.fromTo("#ec-arc", { opacity: 0 }, { opacity: 1, duration: 0.02, ease: "none" }, 0.6);
+      tl.fromTo("#ec-arc", { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.45, ease: "power2.out" }, 0.6);
+      tl.fromTo("#ec-dot", { scale: 0, transformOrigin: "50% 50%" }, { scale: 1, duration: 0.4, ease: "back.out(1.4)" }, 0.95);
+      tl.fromTo("#ec-base", { opacity: 0 }, { opacity: 1, duration: 0.02, ease: "none" }, 1.0);
+      tl.fromTo("#ec-base", { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.3, ease: "power2.out" }, 1.0);
+      tl.fromTo("#ec-name", { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.55, ease: "expo.out" }, 1.05);
+      tl.fromTo("#ec-kam", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.18, ease: "power4.out" }, 1.4);
+      tl.fromTo("#ec-line .w", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.13, ease: "power4.out", stagger: 0.05 }, 1.15);
+      tl.fromTo("#ec-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "expo.out" }, 1.45);
+      tl.fromTo("#ec-by", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 1.55);
+      window.__timelines["endcard"] = tl;
+    })();
+  </script>
+</template>

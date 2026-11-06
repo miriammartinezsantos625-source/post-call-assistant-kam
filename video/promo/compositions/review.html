@@ -1,0 +1,65 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; background: #F4F6F8; }
+    #rv-cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+    #rv-cam img { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+    #rv-img4 { opacity: 0; }
+    .rv-cover { position: absolute; background: #F4F6F8; }
+    /* hides the page title the capture cut at the top edge */
+    #rv-cover-top { left: 337px; top: 0; width: 1583px; height: 44px; }
+    /* the record's fields before the AI fills them */
+    #rv-cover-left { left: 468px; top: 246px; width: 810px; height: 834px; }
+    /* the decision panel before the alert lands */
+    #rv-cover-alert { left: 1330px; top: 258px; width: 462px; height: 246px; }
+    #rv-press { position: absolute; left: 1334px; top: 725px; width: 450px; height: 48px; border-radius: 6px; background: #000; opacity: 0; }
+    #rv-cursor { position: absolute; left: 0; top: 0; width: 64px; height: 64px; filter: drop-shadow(0 4px 6px rgba(11,25,41,.35)); }
+  </style>
+
+  <div id="root" data-composition-id="review" data-width="1920" data-height="1080">
+    <div id="rv-cam">
+      <img id="rv-img3" src="assets/screens/03_revision.png" alt="Pantalla de revisión con la alerta" />
+      <img id="rv-img4" src="assets/screens/04_panel_ok.png" alt="Alerta confirmada y Aprobar activo" />
+      <div id="rv-cover-top" class="rv-cover"></div>
+      <div id="rv-cover-left" class="rv-cover"></div>
+      <div id="rv-cover-alert" class="rv-cover"></div>
+      <div id="rv-press"></div>
+    </div>
+    <svg id="rv-cursor" viewBox="0 0 32 32">
+      <path d="M4 2 L4 26 L10 20 L14.5 29.5 L18.5 27.7 L14.2 18.5 L22.5 18.5 Z" fill="#FFFFFF" stroke="#0B1929" stroke-width="1.8" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      // camera framings (scale, x, y) on the 1920x1080 screen, transform-origin 0 0
+      const WIDE_IN = { scale: 1.12, x: -115.2, y: -64.8 };
+      const WIDE = { scale: 1, x: 0, y: 0 };
+      const OBJECTIVE = { scale: 1.55, x: -385.4, y: -41.3 };
+      const PANEL = { scale: 1.6, x: -1152, y: -289 };
+
+      // arrival: the review screen settles (the card from the last scene lands here)
+      tl.fromTo("#rv-cam", WIDE_IN, { ...WIDE, duration: 0.7, ease: "expo.out", immediateRender: true }, 0);
+      // «la inteligencia artificial local…»: push to the record
+      tl.fromTo("#rv-cam", WIDE, { ...OBJECTIVE, duration: 0.6, ease: "power2.inOut", immediateRender: false }, 0.85);
+      // «…lo convierte en una ficha»: the fields fill in, top to bottom
+      tl.fromTo("#rv-cover-left", { clipPath: "inset(0% 0% 0% 0%)" }, { clipPath: "inset(100% 0% 0% 0%)", duration: 1.5, ease: "power2.inOut" }, 1.45);
+      // pan to the decision panel
+      tl.fromTo("#rv-cam", OBJECTIVE, { ...PANEL, duration: 0.6, ease: "power2.inOut", immediateRender: false }, 4.05);
+      // «posible efecto adverso» (abs 12.94): the alert lands from its red edge
+      tl.fromTo("#rv-cover-alert", { clipPath: "inset(0% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 100%)", duration: 0.5, ease: "expo.out" }, 5.32);
+
+      // «y nada se guarda sin tu aprobación»: the KAM confirms, then approves
+      const CHECK = { x: 990, y: 688 };      // checkbox, in frame pixels at the PANEL framing
+      const APPROVE = { x: 1336, y: 902 };   // «Aprobar y guardar»
+      tl.fromTo("#rv-cursor", { x: 1500, y: 1180, scale: 1 }, { x: CHECK.x, y: CHECK.y, duration: 0.55, ease: "expo.out" }, 7.0);
+      tl.fromTo("#rv-cursor", { scale: 1 }, { scale: 0.86, duration: 0.06, ease: "power2.in", yoyo: true, repeat: 1, immediateRender: false }, 7.62);
+      tl.fromTo("#rv-img4", { opacity: 0 }, { opacity: 1, duration: 0.03, ease: "none" }, 7.65);
+      tl.fromTo("#rv-cursor", CHECK, { x: APPROVE.x, y: APPROVE.y, duration: 0.55, ease: "power2.inOut", immediateRender: false }, 8.1);
+      tl.fromTo("#rv-cursor", { scale: 1 }, { scale: 0.86, duration: 0.06, ease: "power2.in", yoyo: true, repeat: 1, immediateRender: false }, 8.92);
+      tl.fromTo("#rv-press", { opacity: 0 }, { opacity: 0.22, duration: 0.06, ease: "none" }, 8.95);
+
+      window.__timelines["review"] = tl;
+    })();
+  </script>
+</template>

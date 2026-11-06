@@ -1,0 +1,13 @@
+cuenta_id,centro,tipo_centro,provincia,segmento
+1,Hospital Demo Norte,hospital general,Valencia,A
+2,Hospital Demo Sur,hospital general,Valencia,B
+3,Centro de Salud Mental Demo Centro,USM adultos,Valencia,B
+4,Hospital Demo Universitario,hospital universitario,Valencia,A
+5,Hospital Demo Comarcal Costa,hospital comarcal,Valencia,C
+6,USMIA Demo Este,USM infanto-juvenil,Valencia,B
+7,Hospital Demo Materno-Infantil,hospital materno-infantil,Valencia,A
+8,Hospital Demo Interior,hospital comarcal,Castellón,C
+9,Centro de Salud Mental Demo Oeste,USM adultos,Alicante,C
+10,Hospital Demo Provincial,hospital general,Alicante,B
+11,Hospital Demo Litoral,hospital general,Castellón,B
+12,USMIA Demo Centro,USM infanto-juvenil,Valencia,A

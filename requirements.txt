@@ -1,0 +1,10 @@
+# Streamlit Community Cloud (public demo mode) — the local pipeline adds requirements-local.txt
+streamlit>=1.60
+pandas>=2.2
+altair>=5
+pydantic>=2.7
+pyyaml>=6.0
+python-dotenv>=1.0
+ollama>=0.6
+spacy>=3.8,<3.9
+es_core_news_sm @ https://github.com/explosion/spacy-models/releases/download/es_core_news_sm-3.8.0/es_core_news_sm-3.8.0-py3-none-any.whl

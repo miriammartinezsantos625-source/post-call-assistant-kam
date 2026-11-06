@@ -1,0 +1,111 @@
+<template>
+  <style>
+    @font-face { font-family: "PlexSans"; src: url("assets/fonts/plexsans-400-normal.woff2") format("woff2"); font-weight: 100 700; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #F4F6F8; font-family: "PlexSans", sans-serif; }
+    #cap-cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+    #cap-cam img { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+
+    /* Live state of the app's own dictation widget, laid exactly over the idle one (camera 1.9x) */
+    #cap-rec { position: absolute; z-index: 2; left: 221px; top: 797px; width: 1478px; height: 146px; border-radius: 15px;
+      background: #ECEEF0; display: flex; align-items: center; gap: 30px; padding: 0 44px; }
+    #cap-mic { width: 40px; height: 40px; flex: none; color: #8D949B; }
+    #cap-bars { flex: 1; height: 90px; display: flex; align-items: center; justify-content: space-between; }
+    #cap-bars i { display: block; width: 6px; height: 90px; border-radius: 3px; background: #1F4E79; transform-origin: 50% 50%; transform: scaleY(0.07); opacity: .35; }
+    #cap-timer { font-family: "IBM Plex Mono", monospace; font-size: 30px; color: #3A4048; width: 110px; text-align: right; flex: none; }
+
+    /* The transcription card: grows out of the widget's box */
+    #cap-card { position: absolute; z-index: 1; left: 200px; top: 140px; width: 1520px; height: 820px; border-radius: 16px;
+      background: #FFFFFF; border: 2px solid #D5DEE8; box-shadow: 0 24px 60px -24px rgba(11,25,41,.28);
+      clip-path: inset(657px 21px 17px 21px round 15px); padding: 64px 80px; }
+    #cap-eyebrow { font-family: "IBM Plex Mono", monospace; font-size: 28px; letter-spacing: .12em; text-transform: uppercase; color: #1F4E79; }
+    #cap-text { margin-top: 30px; font-size: 40px; line-height: 1.5; color: #1F2328; }
+    #cap-text .w { display: inline-block; opacity: 0; margin-right: .26em; }
+    #cap-text #cap-swap { display: inline-grid; margin-right: .26em; vertical-align: baseline; }
+    #cap-swap > span { grid-area: 1 / 1; }
+    #cap-name { border-radius: 6px; padding: 0 6px; margin: 0 -6px; }
+    #cap-tag { opacity: 0; font-family: "IBM Plex Mono", monospace; font-size: 34px; color: #1F4E79; background: #E7EFF7;
+      border: 1px solid #BFD0E1; border-radius: 6px; padding: 0 10px; align-self: center; justify-self: start; white-space: nowrap; }
+    #cap-priv { position: absolute; left: 80px; bottom: 64px; display: flex; align-items: center; gap: 16px; padding: 18px 26px;
+      border: 2px solid #D5DEE8; border-radius: 12px; background: #FFFFFF; font-size: 30px; color: #1F2328; opacity: 0; }
+    #cap-priv svg { width: 30px; height: 30px; color: #1F4E79; }
+  </style>
+
+  <div id="root" data-composition-id="capture" data-width="1920" data-height="1080">
+    <div id="cap-cam">
+      <img id="cap-screen" src="assets/screens/01_dictar.png" alt="Pantalla Nueva visita de la app" />
+    </div>
+
+    <div id="cap-rec">
+      <svg id="cap-mic" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2z"/></svg>
+      <div id="cap-bars"></div>
+      <div id="cap-timer">00:00</div>
+    </div>
+
+    <div id="cap-card">
+      <div id="cap-eyebrow">Transcripción · Whisper en este equipo</div>
+      <div id="cap-text"></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      // The real note processed in the demo run (synthetic; the patient name is invented).
+      const NOTE_BEFORE = "Visita a la jefa de servicio de la cuenta 4. Objetivo: que acepte una sesión clínica sobre transición a adultos antes de diciembre. Le ha parecido bien. Me comenta que una paciente suya,";
+      const NOTE_AFTER = "ha tenido mareos desde que empezó el tratamiento. Me pide el resumen de la guía en PDF. Vuelvo en tres semanas para cerrar la fecha.";
+      const text = document.querySelector("#cap-text");
+      const add = (w) => { const s = document.createElement("span"); s.className = "w"; s.textContent = w; text.appendChild(s); };
+      NOTE_BEFORE.split(" ").forEach(add);
+      const swap = document.createElement("span");
+      swap.id = "cap-swap"; swap.className = "w";
+      swap.innerHTML = '<span id="cap-name">Ana López,</span><span id="cap-tag">[PACIENTE],</span>';
+      text.appendChild(swap);
+      NOTE_AFTER.split(" ").forEach(add);
+
+      const bars = document.querySelector("#cap-bars");
+      for (let i = 0; i < 96; i++) bars.appendChild(document.createElement("i"));
+      const barEls = Array.from(bars.children);
+
+      const tl = gsap.timeline({ paused: true });
+
+      // 1 · dictation: the widget goes live (mic turns red, waveform, timer)
+      tl.fromTo("#cap-mic", { color: "#8D949B" }, { color: "#B4483A", duration: 0.12, ease: "none" }, 0.3);
+      tl.fromTo(barEls, { opacity: 0.35 }, { opacity: 1, duration: 0.2, ease: "none" }, 0.3);
+      const wave = { t: 0 };
+      tl.fromTo(wave, { t: 0 }, {
+        t: 3.6, duration: 3.6, ease: "none",
+        onUpdate: () => {
+          const t = wave.t;
+          for (let i = 0; i < barEls.length; i++) {
+            const a = Math.abs(Math.sin(i * 0.61 + t * 8.3) * Math.sin(i * 0.17 - t * 4.7));
+            const env = 0.55 + 0.45 * Math.sin(t * 2.1 + i * 0.05);
+            barEls[i].style.transform = "scaleY(" + (0.07 + 0.93 * a * env * Math.min(1, t * 3)).toFixed(3) + ")";
+          }
+        },
+      }, 0.3);
+      const clock = { s: 0 };
+      tl.fromTo(clock, { s: 0 }, {
+        s: 47, duration: 2.2, ease: "power1.in",
+        onUpdate: () => { document.querySelector("#cap-timer").textContent = "00:" + String(Math.round(clock.s)).padStart(2, "0"); },
+      }, 0.4);
+
+      // 2 · «transcribe»: the widget's box becomes the transcription card; the camera pulls back to the whole screen
+      tl.fromTo("#cap-cam", { x: -681.6, y: -972, scale: 1.9 }, { x: 0, y: 0, scale: 1, duration: 0.6, ease: "power2.inOut", immediateRender: true }, 3.95);
+      tl.fromTo("#cap-rec", { opacity: 1 }, { opacity: 0, duration: 0.18, ease: "power3.in" }, 3.95);
+      tl.fromTo("#cap-card", { clipPath: "inset(657px 21px 17px 21px round 15px)", backgroundColor: "#ECEEF0" },
+        { clipPath: "inset(0px 0px 0px 0px round 16px)", backgroundColor: "#FFFFFF", duration: 0.6, ease: "expo.out" }, 3.97);
+      tl.fromTo("#cap-eyebrow", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.15, ease: "power4.out" }, 4.3);
+      tl.fromTo("#cap-text .w", { opacity: 0, filter: "blur(6px)" },
+        { opacity: 1, filter: "blur(0px)", duration: 0.13, ease: "power4.out", stagger: 0.03 }, 4.4);
+
+      // 3 · «quita los datos del paciente»: the name is marked, then replaced
+      tl.fromTo("#cap-name", { backgroundColor: "rgba(231,239,247,0)" }, { backgroundColor: "rgba(191,208,225,1)", duration: 0.15, ease: "none" }, 5.72);
+      tl.fromTo("#cap-name", { opacity: 1, filter: "blur(0px)" }, { opacity: 0, filter: "blur(6px)", duration: 0.16, ease: "power3.in" }, 6.0);
+      tl.fromTo("#cap-tag", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power4.out" }, 6.12);
+
+      // exit: the card is carried into the workspace
+      tl.fromTo("#cap-card", { scale: 1, opacity: 1, filter: "blur(0px)" }, { scale: 0.9, opacity: 0, filter: "blur(8px)", duration: 0.3, ease: "power3.in" }, 7.3);
+
+      window.__timelines["capture"] = tl;
+    })();
+  </script>
+</template>
